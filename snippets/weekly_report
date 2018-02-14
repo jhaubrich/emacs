@@ -1,0 +1,39 @@
+# -*- mode: snippet -*-
+# name: weekly report
+# key: w
+# expand-env : yaml-mode
+# --
+---
+${4:- Maintain and Modify Tools:
+    hours: ${5:}
+    comments: ${6:}}
+${10:- Perform Anomaly Investigation:
+    hours: ${11:}
+    comments: ${12:}}
+${13:- Perform Field Support:
+    hours: ${14:}
+    comments: ${15:}}
+${16:- ATCSCC Relocation:
+    hours: ${17:}
+    comments: ${18:}}
+${19:- SCT Noise Study:
+    hours: ${20:}
+    comments: ${21:}}
+${22:- SCT Relocation:
+    hours: ${23:}
+    comments: ${24:}}
+${25:- Perform Offline Monitoring:
+    hours: ${26:}
+    comments: ${27:}}
+${28:- Perform System Monitoring:
+    hours: ${29:}
+    comments: ${30:}}
+${31:- Develop and Provide Training to Enhance WOS Skills:
+    hours: ${32:}
+    comments: ${33:}}
+${34:- Develop WRE Bias and CNMP Tool:
+    hours: ${35:}
+    comments: ${36:}}
+${37:- Investigate Increased RF Interference at WRSs:
+    hours: ${38:}
+    comments: ${39:}}
