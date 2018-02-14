@@ -87,23 +87,27 @@ You may need to install =use-package= by hand. In emacs 24 it was a 2014 version
 that did not support =:pin=.
 
 #+BEGIN_SRC emacs-lisp
-    ;; To avoid problems with files newer than their byte-compiled counterparts
-    ;; it's better a slower startup than load an outdated and maybe bugged package
-    (setq load-prefer-newer t)
-    ;; initialize the packages and create the packages list if not exists
-    (package-initialize)
-    (when (not package-archive-contents)
-      (package-refresh-contents))
+  ;; To avoid problems with files newer than their byte-compiled counterparts
+  ;; it's better a slower startup than load an outdated and maybe bugged package
+  (setq load-prefer-newer t)
+  ;; initialize the packages and create the packages list if not exists
+  (package-initialize)
+  (when (not package-archive-contents)
+    (package-refresh-contents))
 
-    ;; install use-package if not exists
-    (unless (package-installed-p 'use-package)
-      (package-install 'use-package))
+  ;; install use-package if not exists
+  (unless (package-installed-p 'use-package)
+    (package-install 'use-package))
 
-    (eval-when-compile
-      (require 'use-package))
-    (require 'diminish)                ;; if you use :diminish
-    (require 'bind-key)                ;; if you use any :bind variant
-#+END_SRC
+  (eval-when-compile
+    (require 'use-package)
+    (use-package diminish
+      :ensure t
+      :pin melpa-stable)
+    (use-package bind-key
+      :ensure t
+      :pin melpa-stable))
+#+end_src
 
 * Misc
 ** Theme
@@ -1882,7 +1886,7 @@ Settings for the Emacs Web Browser.
 ** spelling
 Turn on spell checking by default, and use hunspell instead of ispell.
 
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle no
   (setq-default ispell-program-name    "hunspell")
                 ;; ispell-really-hunspell t
                 ;; ispell-check-comments  t
@@ -3324,81 +3328,80 @@ to line according to moving up and down the line list.
 #+end_src
 
 #+BEGIN_SRC emacs-lisp
+  (use-package helm
+               :ensure t
+               :config
+               (progn
+                 (require 'helm-config)
+                 (setq
+                  helm-surfraw-duckduckgo-url "https://duckduckgo.com/lite/?q=!%s&kip=1"
+                  helm-idle-delay 0.0
+                  helm-input-idle-delay 0.01
+                  helm-quick-update t
+                  helm-M-x-requires-pattern nil
+                  helm-M-x-fuzzy-match t
+                  helm-buffers-fuzzy-matching t
+                  helm-recentf-fuzzy-match t
+                  helm-semantic-fuzzy-match t
+                  helm-imenu-fuzzy-match t
+                  helm-locate-fuzzy-match t
+                  helm-ff-skip-boring-files t)
 
-  :ensure t
-  :config
-  (progn
-    (require 'helm-config)
-    (require 'helm)
-    (setq
-     helm-surfraw-duckduckgo-url "https://duckduckgo.com/lite/?q=!%s&kp=1"
-     helm-idle-delay 0.0
-     helm-input-idle-delay 0.01
-     helm-quick-update t
-     helm-M-x-requires-pattern nil
-     helm-M-x-fuzzy-match t
-     helm-buffers-fuzzy-matching t
-     helm-recentf-fuzzy-match t
-     helm-semantic-fuzzy-match t
-     helm-imenu-fuzzy-match t
-     helm-locate-fuzzy-match t
-     helm-ff-skip-boring-files t)
+                 (global-set-key (kbd "C-h a") 'helm-apropos)
 
-    (global-set-key (kbd "C-h a") 'helm-apropos)
+                 ;; The default "C-x c" is quite close to "C-x C-c", which quits Emacs.
+                 ;; Changed to "C-c h". Note: We must set "C-c h" globally, because we
+                 ;; cannot change `helm-command-prefix-key' once `helm-config' is loaded.
+                 (global-set-key (kbd "C-c h") 'helm-command-prefix)
+                 (global-unset-key (kbd "C-x c"))
 
-    ;; The default "C-x c" is quite close to "C-x C-c", which quits Emacs.
-    ;; Changed to "C-c h". Note: We must set "C-c h" globally, because we
-    ;; cannot change `helm-command-prefix-key' once `helm-config' is loaded.
-    (global-set-key (kbd "C-c h") 'helm-command-prefix)
-    (global-unset-key (kbd "C-x c"))
+                 (define-key helm-map (kbd "<tab>") 'helm-execute-persistent-action) ; rebind tab to run persistent action
+                 (define-key helm-map (kbd "C-i") 'helm-execute-persistent-action) ; make TAB work in terminal
+                 (define-key helm-map (kbd "C-z")  'helm-select-action) ; list actions using C-z
 
-    (define-key helm-map (kbd "<tab>") 'helm-execute-persistent-action) ; rebind tab to run persistent action
-    (define-key helm-map (kbd "C-i") 'helm-execute-persistent-action) ; make TAB work in terminal
-    (define-key helm-map (kbd "C-z")  'helm-select-action) ; list actions using C-z
+                 (define-key helm-map (kbd "C-w")  'backward-kill-word) ; the default is "Yank symbol at point from helm-current-buffer" - wth?!
 
-    (define-key helm-map (kbd "C-w")  'backward-kill-word) ; the default is "Yank symbol at point from helm-current-buffer" - wth?!
+                 (when (executable-find "curl")
+                   (setq helm-google-suggest-use-curl-p t))
 
-    (when (executable-find "curl")
-      (setq helm-google-suggest-use-curl-p t))
+                 (setq helm-split-window-in-side-p           t ; open helm buffer inside current window, not occupy whole other window
+                       helm-move-to-line-cycle-in-source     t ; move to end or beginning of source when reaching top or bottom of source.
+                       helm-ff-search-library-in-sexp        t ; search for library in `require' and `declare-function' sexp.
+                       helm-scroll-amount                    8 ; scroll 8 lines other window using M-<next>/M-<prior>
+                       helm-ff-file-name-history-use-recentf t
+                       helm-display-header-line nil)
 
-    (setq helm-split-window-in-side-p           t ; open helm buffer inside current window, not occupy whole other window
-          helm-move-to-line-cycle-in-source     t ; move to end or beginning of source when reaching top or bottom of source.
-          helm-ff-search-library-in-sexp        t ; search for library in `require' and `declare-function' sexp.
-          helm-scroll-amount                    8 ; scroll 8 lines other window using M-<next>/M-<prior>
-          helm-ff-file-name-history-use-recentf t
-          helm-display-header-line nil)
+                 (set-face-attribute 'helm-source-header nil :height 0.1)
 
-    (set-face-attribute 'helm-source-header nil :height 0.1)
+                 (setq helm-autoresize-max-height 0)
+                 (setq helm-autoresize-min-height 25)
+                 (helm-autoresize-mode 1)
 
-    (setq helm-autoresize-max-height 0)
-    (setq helm-autoresize-min-height 25)
-    (helm-autoresize-mode 1)
+                 (helm-mode 1)
+                 )
 
-    (helm-mode 1)
-    )
+               (use-package helm-c-yasnippet
+                            :ensure t
+                            :config (progn
+                                      (global-set-key (kbd "C-c y") 'helm-yas-complete)
+                                      (setq helm-yas-space-match-any-greedy t)))
 
-  (use-package helm-c-yasnippet
-    :ensure t
-    :config (progn
-              (global-set-key (kbd "C-c y") 'helm-yas-complete)
-              (setq helm-yas-space-match-any-greedy t)))
+               (use-package helm-descbinds
+                            ;; counsel-descbinds
+                            :ensure t
+                            :config
+                            (helm-descbinds-mode t)
+                            (setq helm-descbinds-window-sytle 'split-window))
 
-  (use-package helm-descbinds
-    ;; counsel-descbinds
-    :ensure t
-    :config
-    (helm-descbinds-mode t)
-    (setq helm-descbinds-window-sytle 'split-window))
+               (use-package helm-swoop
+                            ;; counsel-swiper
+                            :pin melpa-stable
+                            :commands (helm-swoop helm-multi-swoop))
 
-  (use-package helm-swoop
-    ;; counsel-swiper
-    :pin melpa-stable
-    :commands (helm-swoop helm-multi-swoop))
-
-  (use-package helm-themes
-    ;; counsel-themes
-    :commands helm-themes)
-
+               (use-package helm-themes
+                            ;; counsel-themes
+                            :commands helm-themes)
+  )
 #+END_SRC
 
 Eshell goodies - need to play with this before I decide.
