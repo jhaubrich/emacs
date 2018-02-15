@@ -1362,7 +1362,10 @@ Just some defaults to get us going.
   (setq x-select-request-type '(UTF8_STRING COMPOUND_TEXT TEXT STRING))
 
 
-  ;; disable auto-save files & backups
+  ;; DISABLE LOCK FILES
+  (setq create-lockfiles nil)
+
+  ;; DISABLE AUTO-SAVE FILES & BACKUPS
   ;; I prefer to use a undo-tree with branches instead of store auto-save
   ;; files. Because I'm using gpg to authetication and encrypt/sign files,
   ;; is more secure don't have a plaint text backup of those files. Use a
@@ -2249,51 +2252,65 @@ that automates and advances completion-system.
 This is always so annoying. Lets try: TAB complete. up/down initiate menu.
 
 #+BEGIN_SRC emacs-lisp
-    (use-package auto-complete
-      :ensure t
-      :pin melpa-stable
-      :diminish auto-complete-mode
-      :config
-      (progn
-        (ac-config-default)
+  (use-package auto-complete
+    :ensure t
+    :pin melpa-stable
+    :diminish auto-complete-mode
+    :config
+    (progn
+      (ac-config-default)
+      ;; https://github.com/auto-complete/auto-complete/blob/master/doc/manual.md
 
-        ;; THERE were weird bugs, some of this might be ok...
-        ;; (global-auto-complete-mode)
-        ;; (add-to-list 'ac-sources 'ac-source-abbrev)
-        ;; (add-to-list 'ac-sources 'ac-source-dictionary)
-        ;; (add-to-list 'ac-sources 'ac-source-filename)
-        ;; (add-to-list 'ac-sources 'ac-source-imenu)
-        ;; (add-to-list 'ac-sources 'ac-source-semantic)
-        ;; (add-to-list 'ac-sources 'ac-source-words-in-buffer)
-        ;; (add-to-list 'ac-sources 'ac-source-yasnippet)
+      ;; Finish completion by TAB
 
-        ;; (setq ac-use-menu-map t
-        ;;       ac-ignore-case 'smart
-        ;;       ac-auto-start t
-        ;;       ac-auto-show-menu nil)
+      ;; As we described above, there is many behaviors in TAB. You
+      ;; need to use TAB and RET properly, but there is a simple
+      ;; interface that bind RET to original and TAB to finish
+      ;; completion:
 
-        ;; (ac-flyspell-workaround)
-        (define-key ac-completing-map "\C-e" 'ac-complete)
-        ;; (define-key ac-completing-map "<tab>" 'ac-next)
-        ;; (define-key ac-completing-map "\C-n>" 'ac-next) (ac-)
-        ;; (define-key ac-completing-map "<backtab>" 'ac-previous)
-        (define-key ac-completing-map [up] nil)
-        (define-key ac-completing-map [down] nil)
-        (define-key ac-menu-map [up] nil)
-        (define-key ac-menu-map [down] nil)
-  )
+      (define-key ac-completing-map "\t" 'ac-complete)
+      (define-key ac-completing-map "\r" nil)
 
-      ;; the file where store the history of auto-complete.
-      (setq ac-comphist-file (concat user-emacs-directory
-                                     "temp/ac-comphist.dat"))
+      ;; my own changes
+      (define-key ac-completing-map "\C-e" 'ac-complete)
+      (define-key ac-completing-map [up] nil)
+      (define-key ac-completing-map [down] nil)
+      (define-key ac-menu-map [up] nil)
+      (define-key ac-menu-map [down] nil)
 
-      ;; dirty fix for having AC everywhere
-      (define-globalized-minor-mode real-global-auto-complete-mode
-        auto-complete-mode (lambda ()
-                             (if (not (minibufferp (current-buffer)))
-                                 (auto-complete-mode 1))
-                             ))
-      (real-global-auto-complete-mode t))
+
+      ;; THERE were weird bugs, some of this might be ok...
+      ;; (global-auto-complete-mode)
+      ;; (add-to-list 'ac-sources 'ac-source-abbrev)
+      ;; (add-to-list 'ac-sources 'ac-source-dictionary)
+      ;; (add-to-list 'ac-sources 'ac-source-filename)
+      ;; (add-to-list 'ac-sources 'ac-source-imenu)
+      ;; (add-to-list 'ac-sources 'ac-source-semantic)
+      ;; (add-to-list 'ac-sources 'ac-source-words-in-buffer)
+      ;; (add-to-list 'ac-sources 'ac-source-yasnippet)
+
+      ;; (setq ac-use-menu-map t
+      ;;       ac-ignore-case 'smart
+      ;;       ac-auto-start t
+      ;;       ac-auto-show-menu nil)
+
+      ;; (ac-flyspell-workaround)
+      ;; (define-key ac-completing-map "<tab>" 'ac-next)
+      ;; (define-key ac-completing-map "\C-n>" 'ac-next) (ac-)
+      ;; (define-key ac-completing-map "<backtab>" 'ac-previous)
+      )
+
+    ;; the file where store the history of auto-complete.
+    (setq ac-comphist-file (concat user-emacs-directory
+                                   "temp/ac-comphist.dat"))
+
+    ;; dirty fix for having AC everywhere
+    (define-globalized-minor-mode real-global-auto-complete-mode
+      auto-complete-mode (lambda ()
+                           (if (not (minibufferp (current-buffer)))
+                               (auto-complete-mode 1))
+                           ))
+    (real-global-auto-complete-mode t))
 #+END_SRC
 
 ** magit
