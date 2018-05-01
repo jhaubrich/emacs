@@ -3254,6 +3254,7 @@ http://oremacs.com/
       (global-set-key (kbd "M-x") 'counsel-M-x)
       (global-set-key (kbd "C-.") 'counsel-M-x)
       (global-set-key (kbd "C-x C-f") 'counsel-find-file)
+      ; (global-set-key (kbd "C-x b") 'switch-to-buffer)  ;; doesn't need to be specified unless overwritten by helm
 
       (global-set-key (kbd "<f1> f") 'counsel-describe-function)
       (global-set-key (kbd "<f1> b") 'counsel-descbinds)
@@ -3264,10 +3265,12 @@ http://oremacs.com/
       (global-set-key (kbd "<f2> u") 'counsel-unicode-char)
 
       (global-set-key (kbd "C-c k") 'counsel-ag)
+      (global-set-key (kbd "C-c a") 'counsel-ag)
       (global-set-key (kbd "C-x l") 'counsel-locate)
       (global-set-key (kbd "C-S-o") 'counsel-rhythmbox)
 
       (global-set-key (kbd "C-x C-o") 'counsel-git)
+      (global-set-key (kbd "C-x C-p") 'counsel-git)
       (global-set-key (kbd "C-c j") 'counsel-git-grep)
 
       )
@@ -3333,12 +3336,12 @@ to line according to moving up and down the line list.
 
 #+begin_src emacs-lisp
   ;; All-in helm keybinds
-  (global-set-key (kbd "M-x") 'helm-M-x)
-  (global-set-key (kbd "C-.") 'helm-M-x)
-  (global-set-key (kbd "C-x C-f") 'helm-find-files)
-  (global-set-key (kbd "C-h a") 'helm-apropos)
-  (global-set-key (kbd "M-y") 'helm-show-kill-ring)
-  (global-set-key (kbd "C-x b") 'helm-mini)
+;  (global-set-key (kbd "M-x") 'helm-M-x)
+;  (global-set-key (kbd "C-.") 'helm-M-x)
+;  (global-set-key (kbd "C-x C-f") 'helm-find-files)
+;  (global-set-key (kbd "C-h a") 'helm-apropos)
+;  (global-set-key (kbd "M-y") 'helm-show-kill-ring)
+;  (global-set-key (kbd "C-x b") 'helm-mini)
   (global-set-key (kbd "C-c h o") 'helm-occur)
   (global-set-key (kbd "C-h SPC") 'helm-all-mark-rings)
   (global-set-key (kbd "C-c h g") 'helm-google-suggest)
