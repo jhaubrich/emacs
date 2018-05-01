@@ -280,7 +280,7 @@ become one of those dirty join-from-belowers.
            (set-cursor-color "#f92671")))
 
   (setq-default set-cursor-color "#f92671")
-  (setq-default cursor-type 'bar)
+  (setq-default cursor-type 'box)
 
 #+end_src
 
@@ -1307,7 +1307,7 @@ For more info and instructions for other distros, see Lars' post.
 Just some defaults to get us going.
 
 #+BEGIN_SRC emacs-lisp
-  (when (display-graphic-p)
+  ;;(when (display-graphic-p)
     (progn
       (tool-bar-mode -1)
       (scroll-bar-mode -1)
@@ -1316,7 +1316,7 @@ Just some defaults to get us going.
       (setq focus-follows-mouse t)
       (setq mouse-autoselect-window t)
       (setq-default truncate-lines t)
-  ))
+  ) ;)
 
   (setq inhibit-startup-screen t                ;; the welcome screen is for guests only, I'm at home now!
         initial-scratch-message nil             ;; remove the message in the scratch buffer
@@ -1340,8 +1340,9 @@ Just some defaults to get us going.
   ;; tab-complete only if line is properly indented already
   (setq tab-always-indent t)
 
-  ;; set-column-fill but WHYYYY?1?!
-  (global-key-binding (kbd "C-x C-f") 'find-file)
+  ;; Fix some keybinds
+  (global-set-key (kbd "C-x f") 'find-file) ;; set-fill-column by default, ugh
+  (global-set-key (kbd "C-x C-p") 'project-find-file)  ;; mark-page by default
 
   ;; use ibuffer by default
   (defalias 'list-buffers 'ibuffer)
@@ -2337,12 +2338,12 @@ used here.
 startup.
 
 #+begin_src emacs-lisp
-  (when (display-graphic-p)
+;  (when (display-graphic-p)
     (use-package git-gutter-fringe
       :ensure t
       :diminish git-gutter-mode
       :init
-      (global-git-gutter-mode)))
+      (global-git-gutter-mode)) ;)
 #+end_src
 
 ** git-timemachine
@@ -3347,6 +3348,7 @@ to line according to moving up and down the line list.
 #+BEGIN_SRC emacs-lisp
   (use-package helm
                :ensure t
+               :diminish helm-mode
                :config
                (progn
                  (require 'helm-config)
@@ -3924,6 +3926,7 @@ This seems really handy for a *small* laptop screen.
 #+begin_src emacs-lisp
   (use-package golden-ratio
     :ensure t
+    :diminish golden-ratio-mode
     :config
     (golden-ratio-mode 1)
     (setq golden-ratio-adjust-factor .8
