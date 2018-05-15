@@ -2202,11 +2202,11 @@ Two ways to avoid to use more than one buffer when using Dired.
   :ensure t)
 #+end_src
 
-** TODO company-mode
+** DONE company-mode
 Company-mode has always been buggy and in the way. This configuration
 needs serious revision and should probably just go.
 
-#+begin_src emacs-lisp :tangle no
+#+begin_src emacs-lisp
   (use-package company
     :pin melpa-stable
     :ensure t
@@ -2246,13 +2246,13 @@ needs serious revision and should probably just go.
     ))
 #+end_src
 
-** DONE auto-complete
+** TODO auto-complete
 [[https://github.com/auto-complete/auto-complete][Auto Complete Mode]] (aka =auto-complete.el=, =auto-complete-mode=) is a extension
 that automates and advances completion-system.
 
 This is always so annoying. Lets try: TAB complete. up/down initiate menu.
 
-#+BEGIN_SRC emacs-lisp
+#+BEGIN_SRC emacs-lisp :tangle no
   (use-package auto-complete
     :ensure t
     :pin melpa-stable
@@ -3159,8 +3159,11 @@ current mode.
   (use-package yasnippet
     :ensure t
     :defer 5
-    :diminish yas-minor-mode
-    :config (yas-global-mode 1))
+    ;; :diminish yas-minor-mode
+    ;; :init (add-hook 'prog-mode-hook #'yas-minor-mode)
+    :config (progn
+              (yas-global-mode 1)
+              (yas-reload-all)))
 
   (use-package auto-yasnippet
     :ensure t
@@ -3169,6 +3172,11 @@ current mode.
       ;; (yas-load-directory "<path>/<to>/snippets/")
       ))
 
+
+  ;; maintained seperately - AndreaCrotti
+  (use-package yasnippet-snippets
+    :ensure t
+    )
 #+END_SRC
 
 aya's open line or yas-expand.
@@ -3954,6 +3962,104 @@ This seems really handy for a *small* laptop screen.
   (add-hook 'python-mode-hook 'jhaus-coding-hook)
   (add-hook 'js2-mode-hook 'jhaus-coding-hook)
   (add-hook 'c-mode-hook 'jhaus-coding-hook)
+#+end_src
+
+
+** C++
+Before using RTags you need to start rdm and index your project. In
+order to index your project, RTags requires you to export your
+project's compile commands with cmake.
+
+$ rdm &
+$ cd /path/to/project/root
+$ cmake . -DCMAKE_EXPORT_COMPILE_COMMANDS=1
+$ rc -J .
+
+NOTE: Like RTags, Irony requires a compilation database. To create
+one run the following:
+
+$ cd /path/to/project/root
+$ cmake . -DCMAKE_EXPORT_COMPILE_COMMANDS=1
+
+
+#+begin_src emacs-lisp
+  (add-hook 'c++-mode-hook 'electric-pair-mode)
+  (add-hook 'c-mode-hook 'electric-pair-mode)
+  (add-hook 'objc-mode-hook 'electric-pair-mode)
+
+  (use-package company-rtags
+    :ensure t)
+
+  (use-package rtags
+    :ensure t
+    :config (progn
+              (setq rtags-completions-enabled t)
+              (eval-after-load 'company
+                '(add-to-list
+                  'company-backends 'company-rtags))
+              (setq rtags-autostart-diagnostics t)
+              (rtags-enable-standard-keybindings)))
+
+  (use-package helm-rtags
+    :ensure t
+    :config (setq rtags-use-helm t))
+
+
+
+
+  (use-package irony
+    :ensure t
+    :config (progn
+              (add-hook 'c++-mode-hook 'irony-mode)
+              (add-hook 'c-mode-hook 'irony-mode)
+              (add-hook 'objc-mode-hook 'irony-mode)
+
+              (defun my-irony-mode-hook ()
+                (define-key irony-mode-map [remap completion-at-point]
+                  'irony-completion-at-point-async)
+                (define-key irony-mode-map [remap complete-symbol]
+                  'irony-completion-at-point-async))
+
+              (add-hook 'irony-mode-hook 'my-irony-mode-hook)
+              (add-hook 'irony-mode-hook 'irony-cdb-autosetup-compile-options)))
+
+
+  (use-package company-irony
+    :ensure t
+    :config (progn
+              (add-hook 'irony-mode-hook 'company-irony-setup-begin-commands)
+              (setq company-backends (delete 'company-semantic company-backends))
+              (eval-after-load 'company
+                '(add-to-list
+                  'company-backends 'company-irony-c-headers 'company-irony))))
+
+  (use-package company-irony-c-headers
+    :ensure t)
+
+
+  (use-package flycheck-rtags
+    :ensure t
+    :config (progn
+              (defun my-flycheck-rtags-setup ()
+                (flycheck-select-checker 'rtags)
+                (setq-local flycheck-highlighting-mode nil) ;; RTags creates more accurate overlays.
+                (setq-local flycheck-check-syntax-automatically nil))
+              ;; c-mode-common-hook is also called by c++-mode
+              (add-hook 'c-mode-common-hook #'my-flycheck-rtags-setup)
+              ))
+
+  (use-package flycheck-irony
+    :ensure t
+    :config (progn
+              (eval-after-load 'flycheck
+                '(add-hook 'flycheck-mode-hook #'flycheck-irony-setup))))
+
+  (use-package cmake-ide
+    :ensure t
+    :config (progn
+              (cmake-ide-setup)
+              (eval-after-load 'flycheck
+                '(add-hook 'flycheck-mode-hook #'flycheck-irony-setup))))
 #+end_src
 
 ** Clojure
