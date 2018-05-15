@@ -1311,7 +1311,7 @@ Just some defaults to get us going.
     (progn
       (tool-bar-mode -1)
       (scroll-bar-mode -1)
-      (fringe-mode '(10 . 5))              ; makes the fringe too small for git-gutter
+      (fringe-mode '(20 . 20))              ; makes the fringe too small for git-gutter
       ;; Sloppy focus
       (setq focus-follows-mouse t)
       (setq mouse-autoselect-window t)
