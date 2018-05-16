@@ -32,7 +32,7 @@
  '(magit-diff-use-overlays nil)
  '(package-selected-packages
    (quote
-    (yasnippet-snippets cmake-ide flycheck-irony flycheck-rtags company-irony-c-headers company-irony-headers company-irony irony irony-mode helm-rtags rtags-helm company-rtags pkgbuild-mode clojure-mode golden-ratio helm helm-c-yasnippet elpy org-beautify-theme org-beautify noctilux-theme dracula-theme smartparens paredit-everywhere clj-refactor flycheck-clojure paredit 4clojure cider systemd swiper pyvenv ac-cider ein sml-mode mu4e-maildirs-extension csv-mode zzz-to-char zop-to-char helm-themes helm-descbinds undo-tree jedi auto-yasnippet multi-term yaml-mode xkcd web-mode use-package spaceline sos smex rcirc-notify rainbow-mode rainbow-identifiers pkg-info page-break-lines org-bullets multiple-cursors mingus markdown-mode magit lua-mode jinja2-mode ido-vertical-mode ido-hacks ibuffer-vc helm-swoop guide-key git-timemachine git-gutter-fringe gist flx f expand-region edit-server dockerfile-mode darktooth-theme counsel charmap bug-hunter bbcode-mode avy auto-complete ag)))
+    (beacon highlight-symbol dumb-jump yasnippet-snippets cmake-ide flycheck-irony flycheck-rtags company-irony-c-headers company-irony-headers company-irony irony irony-mode helm-rtags rtags-helm company-rtags pkgbuild-mode clojure-mode golden-ratio helm helm-c-yasnippet elpy org-beautify-theme org-beautify noctilux-theme dracula-theme smartparens paredit-everywhere clj-refactor flycheck-clojure paredit 4clojure cider systemd swiper pyvenv ac-cider ein sml-mode mu4e-maildirs-extension csv-mode zzz-to-char zop-to-char helm-themes helm-descbinds undo-tree jedi auto-yasnippet multi-term yaml-mode xkcd web-mode use-package spaceline sos smex rcirc-notify rainbow-mode rainbow-identifiers pkg-info page-break-lines org-bullets multiple-cursors mingus markdown-mode magit lua-mode jinja2-mode ido-vertical-mode ido-hacks ibuffer-vc helm-swoop guide-key git-timemachine git-gutter-fringe gist flx f expand-region edit-server dockerfile-mode darktooth-theme counsel charmap bug-hunter bbcode-mode avy auto-complete ag)))
  '(vc-annotate-background nil)
  '(vc-annotate-color-map
    (quote
@@ -93,6 +93,7 @@
  ;; If there is more than one, they won't work right.
  '(default ((t (:inherit nil :stipple nil :background "#202020" :foreground "#cccccc" :inverse-video nil :box nil :strike-through nil :overline nil :underline nil :slant normal :weight normal :height 113 :width normal :foundry "ADBO" :family "Source Code Pro"))))
  '(flymake-errline ((t (:inherit nil :underline nil))))
+ '(fringe ((t (:background "#202020" :foreground "#5f5f5f"))))
  '(mu4e-header-highlight-face ((t (:background "#b6b7c1"))))
  '(mu4e-unread-face ((t (:inherit nil :weight bold))))
  '(rtags-errline ((t (:background "black" :foreground "white" :underline (:color "red" :style wave)))))

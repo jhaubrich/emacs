@@ -2003,6 +2003,70 @@ https://github.com/kai2nenobu/guide-key
     (guide-key-mode 1))
 #+end_src
 
+** Dumb-Jump
+https://github.com/jacktasia/dumb-jump
+Dumb Jump performs best with The Silver Searcher
+
+#+begin_src emacs-lisp
+  (use-package dumb-jump
+    :ensure t
+    :bind (("M-g o" . dumb-jump-go-other-window)
+           ("M-g j" . dumb-jump-go)
+           ("M-g i" . dumb-jump-go-prompt)
+           ("M-g x" . dumb-jump-go-prefer-external)
+           ("M-g z" . dumb-jump-go-prefer-external-other-window))
+    :config (setq dumb-jump-selector 'ivy) ;; (setq dumb-jump-selector 'helm)
+    )
+
+
+  (defhydra dumb-jump-hydra (:color blue :columns 3)
+      "Dumb Jump"
+      ("j" dumb-jump-go "Go")
+      ("o" dumb-jump-go-other-window "Other window")
+      ("e" dumb-jump-go-prefer-external "Go external")
+      ("x" dumb-jump-go-prefer-external-other-window "Go external other window")
+      ("i" dumb-jump-go-prompt "Prompt")
+      ("l" dumb-jump-quick-look "Quick look")
+      ("b" dumb-jump-back "Back"))
+#+end_src
+
+** Highlight-Symbol
+https://github.com/nschum/highlight-symbol.el
+
+Use highlight-symbol to toggle highlighting of the symbol at point
+throughout the current buffer. Use highlight-symbol-mode to keep the
+symbol at point highlighted.
+
+The functions =highlight-symbol-next=, =highlight-symbol-prev=,
+=highlight-symbol-next-in-defun= and =highlight-symbol-prev-in-defun
+allow for cycling through the locations of any symbol at point. Use
+=highlight-symbol-nav-mode= to enable key bindings (=M-n= and =M-p=) for
+navigation. When =highlight-symbol-on-navigation-p= is set, highlighting
+is triggered regardless of =highlight-symbol-idle-delay=.
+
+=highlight-symbol-query-replace= can be used to replace the symbol.
+
+   #+begin_src emacs-lisp
+     (use-package highlight-symbol
+       :ensure
+       :bind (([f3] . highlight-symbol))
+       :config (progn
+                 (highlight-symbol-mode)
+                 (highlight-symbol-nav-mode t)
+                 ))
+   #+end_src
+
+** Beacon
+https://github.com/Malabarba/beacon
+
+Beacon — Never lose your cursor again
+
+#+begin_src emacs-lisp
+  (use-package beacon
+    :ensure
+    :config (beacon-mode t))
+#+end_src
+
 ** bug-hunter
 
 [[./img/bug_hunter.png]]
