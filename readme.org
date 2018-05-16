@@ -2064,7 +2064,11 @@ Beacon — Never lose your cursor again
 #+begin_src emacs-lisp
   (use-package beacon
     :ensure
-    :config (beacon-mode t))
+    :config (progn  (beacon-mode t)
+                    (setq beacon-blink-duration 0.6)
+                    (setq beacon-blink-delay 0.3)
+                    (setq beacon-size 15)
+                    ))
 #+end_src
 
 ** bug-hunter
