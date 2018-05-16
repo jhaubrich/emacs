@@ -1890,7 +1890,7 @@ Settings for the Emacs Web Browser.
 ** spelling
 Turn on spell checking by default, and use hunspell instead of ispell.
 
-#+begin_src emacs-lisp :tangle no
+#+begin_src emacs-lisp
   (setq-default ispell-program-name    "hunspell")
                 ;; ispell-really-hunspell t
                 ;; ispell-check-comments  t
@@ -2049,10 +2049,12 @@ is triggered regardless of =highlight-symbol-idle-delay=.
    #+begin_src emacs-lisp
      (use-package highlight-symbol
        :ensure
+       :diminish highlight-symbol-mode
        :bind (([f3] . highlight-symbol))
        :config (progn
                  (highlight-symbol-mode)
                  (highlight-symbol-nav-mode t)
+                 (setq highlight-symbol-idle-delay 0)
                  ))
    #+end_src
 
@@ -2062,13 +2064,15 @@ https://github.com/Malabarba/beacon
 Beacon — Never lose your cursor again
 
 #+begin_src emacs-lisp
-  (use-package beacon
-    :ensure
-    :config (progn  (beacon-mode t)
-                    (setq beacon-blink-duration 0.6)
-                    (setq beacon-blink-delay 0.3)
-                    (setq beacon-size 15)
-                    ))
+    (use-package beacon
+      :ensure
+      :diminish beacon-mode
+      :config (progn  (beacon-mode t)
+                      (setq beacon-blink-duration 0.3)
+                      (setq beacon-blink-delay 0.3)
+                      (setq beacon-size 15)
+                      (setq beacon-blink-when-point-moves 1)
+                      ))
 #+end_src
 
 ** bug-hunter
@@ -3329,6 +3333,7 @@ http://oremacs.com/
 
       (global-set-key (kbd "M-x") 'counsel-M-x)
       (global-set-key (kbd "C-.") 'counsel-M-x)
+
       (global-set-key (kbd "C-x C-f") 'counsel-find-file)
       ; (global-set-key (kbd "C-x b") 'switch-to-buffer)  ;; doesn't need to be specified unless overwritten by helm
 
@@ -4077,6 +4082,7 @@ $ cmake . -DCMAKE_EXPORT_COMPILE_COMMANDS=1
 
   (use-package irony
     :ensure t
+    :diminish irony-mode
     :config (progn
               (add-hook 'c++-mode-hook 'irony-mode)
               (add-hook 'c-mode-hook 'irony-mode)
