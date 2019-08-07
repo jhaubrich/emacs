@@ -1510,7 +1510,7 @@ open a buffer for making a journal entry.
 #+begin_src emacs-lisp
   (setq org-capture-templates
         '(("t" "Todo" entry (file+headline "~/Dropbox/_notes_/gtd.org" "Tasks")
-           "* TODO %?\n  %i\n  %a")
+           "* %?\n  %i\n  %a")
           ("m" "Music" entry (file+headline "~/Dropbox/_notes_/music.org" "Music Notes")
            "* %?\n  %i\n")
           ("r" "Quotes" plain (file "~/Dropbox/_notes_/quotes")
@@ -1941,8 +1941,13 @@ for the current session.
 * Packages
 ** arch-package-build
 #+BEGIN_src emacs-lisp
-(autoload 'pkgbuild-mode "pkgbuild-mode.el" "PKGBUILD mode." t)
-(setq auto-mode-alist (append '(("/PKGBUILD$" . pkgbuild-mode)) auto-mode-alist))
+  (use-package pkgbuild-mode
+    :ensure t
+    :pin melpa-stable
+    :config (progn
+              ;(autoload 'pkgbuild-mode "pkgbuild-mode.el" "PKGBUILD mode." t)
+              (setq auto-mode-alist (append '(("/PKGBUILD$" . pkgbuild-mode)) auto-mode-alist))
+              ))
 #+end_src
 
 ** Better Defaults
@@ -4041,6 +4046,21 @@ This seems really handy for a *small* laptop screen.
   (add-hook 'c-mode-hook 'jhaus-coding-hook)
 #+end_src
 
+** GDScript
+Put this file in the project directory.
+
+this major mode is buggy. Using atom for now :(
+
+.dir-locals.el
+#+begin_src emacs-lisp :tangle no
+
+;; The 'nil' configuration applies to all modes.
+    ((nil . ((indent-tabs-mode . t)
+            (tab-width . 2)))
+     (haskell-mode . (
+            ;; Highlight leading space characters in Haskell files.
+            (eval . (highlight-regexp "^ *")))))
+#+end_src
 
 ** C++
 Before using RTags you need to start rdm and index your project. In
@@ -4242,6 +4262,9 @@ A: Add this snippet to your emacs configuration to avoid that.
 
 *** TODO jedi
 
+NOTE: cannot find a shared library when running =jedi:install-server=.
+
+
 [[https://github.com/tkf/emacs-jedi][Jedi]] offers very nice auto completion for python-mode.
 
 The first time you install jedi you will have to run =M-x jedi:install-server=.
@@ -4249,7 +4272,7 @@ The first time you install jedi you will have to run =M-x jedi:install-server=.
 This is not working in ipython. I had a fix in my old emacs. Also the timing is
 terrible. I can't type fast enough to keep it from suggesting.
 
-#+BEGIN_src emacs-lisp
+#+BEGIN_src emacs-lisp :tangle no
   (use-package jedi
     :ensure t
     :defer t
